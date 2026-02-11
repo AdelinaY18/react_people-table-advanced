@@ -8,7 +8,7 @@ import type { Person } from '../types/Person';
 
 export const PeoplePage = () => {
   const [people, setPeople] = useState<Person[] | null>(null);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
 
   const { slug } = useParams<{ slug?: string }>();
@@ -16,8 +16,6 @@ export const PeoplePage = () => {
 
   useEffect(() => {
     setError(false);
-    setLoading(true);
-    setPeople(null);
 
     fetch('https://mate-academy.github.io/react_people-table/api/people.json')
       .then(res => res.json())
@@ -34,8 +32,7 @@ export const PeoplePage = () => {
   }, []);
 
   const filteredPeople = useMemo(() => {
-    if (!people)
-    return [];
+    if (!people) return [];
 
     let result = [...people];
 
@@ -59,7 +56,6 @@ export const PeoplePage = () => {
     if (centuries.length) {
       result = result.filter(p => {
         const century = Math.ceil(p.born / 100).toString();
-
         return centuries.includes(century);
       });
     }
@@ -80,7 +76,7 @@ export const PeoplePage = () => {
 
         <div className="column">
           <div className="box table-container">
-            {loading && <Loader />}
+            {loading && <Loader data-cy="loader" />}
 
             {error && (
               <p data-cy="peopleLoadingError" className="has-text-danger">
