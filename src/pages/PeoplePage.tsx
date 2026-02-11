@@ -34,7 +34,8 @@ export const PeoplePage = () => {
   }, []);
 
   const filteredPeople = useMemo(() => {
-    if (!people) return [];
+    if (!people)
+    return [];
 
     let result = [...people];
 
@@ -58,6 +59,7 @@ export const PeoplePage = () => {
     if (centuries.length) {
       result = result.filter(p => {
         const century = Math.ceil(p.born / 100).toString();
+
         return centuries.includes(century);
       });
     }
