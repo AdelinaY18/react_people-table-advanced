@@ -16,6 +16,7 @@ export const PeoplePage = () => {
 
   useEffect(() => {
     setError(false);
+    setLoading(true);
 
     fetch('https://mate-academy.github.io/react_people-table/api/people.json')
       .then(res => res.json())
@@ -25,7 +26,7 @@ export const PeoplePage = () => {
       })
       .catch(() => {
         setError(true);
-        setPeople(null);
+        setPeople([]);
         setLoading(false);
       });
   }, []);
@@ -34,7 +35,6 @@ export const PeoplePage = () => {
     if (!people) return [];
 
     let result = [...people];
-
     const query = searchParams.get('query')?.toLowerCase() || '';
     const sex = searchParams.get('sex');
     const centuries = searchParams.getAll('centuries');
@@ -75,9 +75,9 @@ export const PeoplePage = () => {
 
         <div className="column">
           <div className="box table-container">
-            {loading && <Loader data-cy="loader" />}
+            {loading && <Loader />}
 
-            {error && (
+            {!loading && error && (
               <p data-cy="peopleLoadingError" className="has-text-danger">
                 Something went wrong
               </p>
@@ -89,13 +89,13 @@ export const PeoplePage = () => {
 
             {!loading &&
               !error &&
+              filteredPeople.length === 0 &&
               people &&
-              people.length > 0 &&
-              filteredPeople.length === 0 && (
-                <p>There are no people matching the current search criteria</p>
-              )}
+              people.length > 0 && (
+              <p>There are no people matching the current search criteria</p>
+            )}
 
-            {!loading && !error && people && filteredPeople.length > 0 && (
+            {!loading && !error && filteredPeople.length > 0 && (
               <PeopleTable people={filteredPeople} selectedSlug={slug} />
             )}
           </div>
