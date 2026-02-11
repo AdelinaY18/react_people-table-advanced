@@ -22,12 +22,11 @@ export const PeoplePage = () => {
       .then(data => {
         setPeople(data);
         setLoading(false);
-        setError(false);
       })
       .catch(() => {
         setError(true);
-        setLoading(false);
         setPeople(null);
+        setLoading(false);
       });
   }, []);
 
