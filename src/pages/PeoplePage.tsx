@@ -24,16 +24,17 @@ export const PeoplePage = () => {
       .then(data => {
         setPeople(data);
         setLoading(false);
+        setError(false);
       })
       .catch(() => {
         setError(true);
         setLoading(false);
+        setPeople(null);
       });
   }, []);
 
   const filteredPeople = useMemo(() => {
-    if (!people)
-      return [];
+    if (!people) return [];
 
     let result = [...people];
 
