@@ -16,7 +16,7 @@ export const PeopleTable = ({ people, selectedSlug }: Props) => {
   const order = searchParams.get('order');
 
   const handleSort = (field: SortField) => {
-    const params = new URLSearchParams(searchParams);
+    const params = new URLSearchParams(searchParams.toString());
 
     if (sort !== field) {
       params.set('sort', field);
@@ -32,22 +32,21 @@ export const PeopleTable = ({ people, selectedSlug }: Props) => {
   };
 
   const sortedPeople = [...people].sort((a, b) => {
-    if (!sort) {
-      return 0;
+    if (!sort) return 0;
+
+    const aValue = a[sort];
+    const bValue = b[sort];
+
+    if (sort === 'born' || sort === 'died') {
+      if (aValue == null) return 1;
+      if (bValue == null) return -1;
+
+      const result = Number(aValue) - Number(bValue);
+      return order === 'desc' ? -result : result;
     }
 
-    const aValue = a[sort] ?? '';
-    const bValue = b[sort] ?? '';
-
-    if (aValue > bValue) {
-      return order === 'desc' ? -1 : 1;
-    }
-
-    if (aValue < bValue) {
-      return order === 'desc' ? 1 : -1;
-    }
-
-    return 0;
+    const result = String(aValue ?? '').localeCompare(String(bValue ?? ''));
+    return order === 'desc' ? -result : result;
   });
 
   return (

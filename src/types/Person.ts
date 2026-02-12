@@ -1,9 +1,9 @@
 export interface Person {
-  slug: string;
+  readonly slug: string;
   name: string;
   sex: string;
   born: number;
-  died: number | null;
+  died?: number | null;
   fatherName: string | null;
   motherName: string | null;
 }

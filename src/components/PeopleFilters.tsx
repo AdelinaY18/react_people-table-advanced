@@ -9,7 +9,7 @@ export const PeopleFilters = () => {
   const centuries = searchParams.getAll('centuries');
 
   const handleQueryChange = (value: string) => {
-    const params = new URLSearchParams(searchParams);
+    const params = new URLSearchParams(searchParams.toString());
 
     if (value) {
       params.set('query', value);
@@ -21,18 +21,16 @@ export const PeopleFilters = () => {
   };
 
   const toggleCentury = (century: string) => {
-    const params = new URLSearchParams(searchParams);
+    const params = new URLSearchParams(searchParams.toString());
     const current = params.getAll('centuries');
 
+    const updated = current.includes(century)
+      ? current.filter(c => c !== century)
+      : [...current, century];
+
     params.delete('centuries');
+    updated.forEach(c => params.append('centuries', c));
 
-    if (!current.includes(century)) {
-      current.push(century);
-    } else {
-      current.splice(current.indexOf(century), 1);
-    }
-
-    current.forEach(c => params.append('centuries', c));
     setSearchParams(params);
   };
 
@@ -82,8 +80,11 @@ export const PeopleFilters = () => {
             {['16', '17', '18', '19', '20'].map(c => (
               <button
                 key={c}
+                type="button"
                 data-cy="century"
-                className={`button mr-1 ${centuries.includes(c) ? 'is-info' : ''}`}
+                className={`button mr-1 ${
+                  centuries.includes(c) ? 'is-info' : ''
+                }`}
                 onClick={() => toggleCentury(c)}
               >
                 {c}

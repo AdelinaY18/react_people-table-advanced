@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 import type { Person } from '../types/Person';
 
 type Props = {
@@ -8,10 +8,14 @@ type Props = {
 };
 
 export const PersonLink = ({ person, name, people }: Props) => {
+  const [searchParams] = useSearchParams();
+
+  const search = searchParams.toString() ? `?${searchParams.toString()}` : '';
+
   if (person) {
     return (
       <Link
-        to={`/people/${person.slug}`}
+        to={`/people/${person.slug}${search}`}
         className={person.sex === 'f' ? 'has-text-danger' : ''}
       >
         {person.name}
@@ -19,15 +23,17 @@ export const PersonLink = ({ person, name, people }: Props) => {
     );
   }
 
-  const found = people?.find(p => p.name === name);
+  const found = people?.find(
+    p => p.name.toLowerCase().trim() === name?.toLowerCase().trim(),
+  );
 
   if (!found) {
-    return name ?? '';
+    return <span>{name ?? ''}</span>;
   }
 
   return (
     <Link
-      to={`/people/${found.slug}`}
+      to={`/people/${found.slug}${search}`}
       className={found.sex === 'f' ? 'has-text-danger' : ''}
     >
       {name}

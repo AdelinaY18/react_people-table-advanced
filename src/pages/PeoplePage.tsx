@@ -4,6 +4,7 @@ import { useParams, useSearchParams } from 'react-router-dom';
 import { Loader } from '../components/Loader';
 import { PeopleTable } from '../components/PeopleTable';
 import { PeopleFilters } from '../components/PeopleFilters';
+import { getPeople } from '../api';
 import type { Person } from '../types/Person';
 
 export const PeoplePage = () => {
@@ -20,11 +21,7 @@ export const PeoplePage = () => {
         setLoading(true);
         setError(false);
 
-        const res = await fetch(
-          'https://mate-academy.github.io/react_people-table/api/people.json',
-        );
-
-        const data = await res.json();
+        const data = await getPeople();
 
         setPeople(data ?? []);
       } catch {
@@ -44,6 +41,7 @@ export const PeoplePage = () => {
     }
 
     let result = [...people];
+
     const query = searchParams.get('query')?.toLowerCase() || '';
     const sex = searchParams.get('sex');
     const centuries = searchParams.getAll('centuries');
@@ -52,8 +50,8 @@ export const PeoplePage = () => {
       result = result.filter(
         p =>
           p.name.toLowerCase().includes(query) ||
-          p.motherName?.toLowerCase().includes(query) ||
-          p.fatherName?.toLowerCase().includes(query),
+          (p.motherName || '').toLowerCase().includes(query) ||
+          (p.fatherName || '').toLowerCase().includes(query),
       );
     }
 
@@ -63,11 +61,13 @@ export const PeoplePage = () => {
 
     if (centuries.length) {
       result = result.filter(p => {
-        const century = Math.ceil(p.born / 100).toString();
-
-        {
-          return centuries.includes(century);
+        if (!p.born) {
+          return false;
         }
+
+        const century = Math.ceil(Number(p.born) / 100).toString();
+
+        return centuries.includes(century);
       });
     }
 
