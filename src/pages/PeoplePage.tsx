@@ -26,7 +26,7 @@ export const PeoplePage = () => {
 
         const data = await res.json();
 
-        setPeople(data);
+        setPeople(data ?? []);
       } catch {
         setError(true);
         setPeople(null);
@@ -65,7 +65,9 @@ export const PeoplePage = () => {
       result = result.filter(p => {
         const century = Math.ceil(p.born / 100).toString();
 
-        return centuries.includes(century);
+        {
+          return centuries.includes(century);
+        }
       });
     }
 
@@ -98,11 +100,11 @@ export const PeoplePage = () => {
             )}
 
             {!loading &&
-              !error &&
-              filteredPeople.length === 0 &&
-              people?.length && (
-                <p>There are no people matching the current search criteria</p>
-              )}
+            !error &&
+            filteredPeople.length === 0 &&
+            people?.length ? (
+              <p>There are no people matching the current search criteria</p>
+            ) : null}
 
             {!loading && !error && filteredPeople.length > 0 && (
               <PeopleTable people={filteredPeople} selectedSlug={slug} />
