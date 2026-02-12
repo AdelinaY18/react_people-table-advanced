@@ -15,20 +15,27 @@ export const PeoplePage = () => {
   const [searchParams] = useSearchParams();
 
   useEffect(() => {
-    setError(false);
-    setLoading(true);
+    const loadPeople = async () => {
+      try {
+        setLoading(true);
+        setError(false);
 
-    fetch('https://mate-academy.github.io/react_people-table/api/people.json')
-      .then(res => res.json())
-      .then(data => {
+        const res = await fetch(
+          'https://mate-academy.github.io/react_people-table/api/people.json',
+        );
+
+        const data = await res.json();
+
         setPeople(data);
-        setLoading(false);
-      })
-      .catch(() => {
+      } catch {
         setError(true);
         setPeople([]);
+      } finally {
         setLoading(false);
-      });
+      }
+    };
+
+    loadPeople();
   }, []);
 
   const filteredPeople = useMemo(() => {
