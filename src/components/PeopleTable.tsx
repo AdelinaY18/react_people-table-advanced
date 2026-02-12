@@ -60,19 +60,15 @@ export const PeopleTable = ({ people, selectedSlug }: Props) => {
           <th onClick={() => handleSort('name')} style={{ cursor: 'pointer' }}>
             Name
           </th>
-
           <th onClick={() => handleSort('sex')} style={{ cursor: 'pointer' }}>
             Sex
           </th>
-
           <th onClick={() => handleSort('born')} style={{ cursor: 'pointer' }}>
             Born
           </th>
-
           <th onClick={() => handleSort('died')} style={{ cursor: 'pointer' }}>
             Died
           </th>
-
           <th>Mother</th>
           <th>Father</th>
         </tr>
@@ -87,7 +83,7 @@ export const PeopleTable = ({ people, selectedSlug }: Props) => {
               selectedSlug === person.slug ? 'has-background-warning' : ''
             }
           >
-            <td>
+            <td style={{ color: person.sex === 'f' ? 'red' : 'blue' }}>
               <PersonLink person={person} />
             </td>
             <td>{person.sex}</td>

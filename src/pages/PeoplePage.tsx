@@ -8,7 +8,6 @@ import type { Person } from '../types/Person';
 
 export const PeoplePage = () => {
   const [people, setPeople] = useState<Person[] | null>(null);
-
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
 
@@ -30,7 +29,7 @@ export const PeoplePage = () => {
         setPeople(data);
       } catch {
         setError(true);
-        setPeople([]);
+        setPeople(null);
       } finally {
         setLoading(false);
       }
@@ -78,11 +77,11 @@ export const PeoplePage = () => {
       <h1 className="title">People Page</h1>
 
       <div className="columns is-desktop is-flex-direction-row-reverse">
-        {!loading && !error && people && people.length > 0 && (
+        {!loading && !error && people?.length ? (
           <div className="column is-7-tablet is-narrow-desktop">
             <PeopleFilters />
           </div>
-        )}
+        ) : null}
 
         <div className="column">
           <div className="box table-container">
@@ -94,15 +93,14 @@ export const PeoplePage = () => {
               </p>
             )}
 
-            {!loading && !error && people && people.length === 0 && (
+            {!loading && !error && people?.length === 0 && (
               <p data-cy="noPeopleMessage">There are no people on the server</p>
             )}
 
             {!loading &&
               !error &&
               filteredPeople.length === 0 &&
-              people &&
-              people.length > 0 && (
+              people?.length && (
                 <p>There are no people matching the current search criteria</p>
               )}
 

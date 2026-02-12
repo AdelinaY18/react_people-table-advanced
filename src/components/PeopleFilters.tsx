@@ -28,6 +28,8 @@ export const PeopleFilters = () => {
 
     if (!current.includes(century)) {
       current.push(century);
+    } else {
+      current.splice(current.indexOf(century), 1);
     }
 
     current.forEach(c => params.append('centuries', c));
@@ -68,7 +70,6 @@ export const PeopleFilters = () => {
             value={query}
             onChange={e => handleQueryChange(e.target.value)}
           />
-
           <span className="icon is-left">
             <i className="fas fa-search" />
           </span>
