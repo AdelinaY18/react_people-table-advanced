@@ -7,7 +7,7 @@ import { PeopleFilters } from '../components/PeopleFilters';
 import type { Person } from '../types/Person';
 
 export const PeoplePage = () => {
-  const [people, setPeople] = useState<Person[] | null>(null);
+  const [people, setPeople] = useState<Person[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
 
@@ -32,7 +32,9 @@ export const PeoplePage = () => {
   }, []);
 
   const filteredPeople = useMemo(() => {
-    if (!people) return [];
+    if (!people) {
+      return [];
+    }
 
     let result = [...people];
     const query = searchParams.get('query')?.toLowerCase() || '';
@@ -44,7 +46,7 @@ export const PeoplePage = () => {
         p =>
           p.name.toLowerCase().includes(query) ||
           p.motherName?.toLowerCase().includes(query) ||
-          p.fatherName?.toLowerCase().includes(query)
+          p.fatherName?.toLowerCase().includes(query),
       );
     }
 
@@ -55,6 +57,7 @@ export const PeoplePage = () => {
     if (centuries.length) {
       result = result.filter(p => {
         const century = Math.ceil(p.born / 100).toString();
+
         return centuries.includes(century);
       });
     }
@@ -83,7 +86,7 @@ export const PeoplePage = () => {
               </p>
             )}
 
-            {!loading && !error && people && people.length === 0 && (
+            {!loading && !error && people.length === 0 && (
               <p data-cy="noPeopleMessage">There are no people on the server</p>
             )}
 
@@ -92,8 +95,8 @@ export const PeoplePage = () => {
               filteredPeople.length === 0 &&
               people &&
               people.length > 0 && (
-              <p>There are no people matching the current search criteria</p>
-            )}
+                <p>There are no people matching the current search criteria</p>
+              )}
 
             {!loading && !error && filteredPeople.length > 0 && (
               <PeopleTable people={filteredPeople} selectedSlug={slug} />
